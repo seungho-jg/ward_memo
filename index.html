@@ -4,19 +4,75 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>my gallery</title>
+    <title>minememo</title>
   </head>
   <body>
 
-     <div id="login" class ="group fixed top-1/4 left-1/4 p-4 w-1/2 opacity-80 hover:scale-105 transition-transform ">
-       <div class="relative p-5 bg-slate-500 rounded-lg flex flex-col gap-2 pt-2 shadow-lg">
+     <div id="container" class ="fixed w-screen h-screen p-4 flex items-center justify-center opacity-80">
+       <div id="loginForm" class="group relative p-5 bg-slate-500 w-1/2 max-w-[350px] rounded-lg flex flex-col gap-2 pt-2 shadow-lg hover:scale-105 transition-transform">
          <div class="text-center text-white font-mono font-semibold text-lg">LOGIN</div>
-          <input id="input_id" type="text" placeholder="아이디" class = "w-full rounded-lg p-2">
-          <input type="password" placeholder="비밀번호" class = "w-full rounded-lg p-2">
+          <input id="login_email" type="email" placeholder="이메일" class = "w-full rounded-lg p-2" required>
+          <input id="login_password" type="password" placeholder="비밀번호" class = "w-full rounded-lg p-2" required>
           <button id="login_btn" class="hover:bg-slate-400 rounded-lg p-2 font-semibold" >확인</button>
-          <div id="join" class="hidden text-sm text-center hover:cursor-pointer hover:text-white group-hover:block">회원가입</div>
+          <div id="gotojoin" class="hidden text-sm text-center hover:cursor-pointer hover:text-white group-hover:block">회원가입</div>
        </div>
+       <div id="joinForm" class="group relative p-5 bg-slate-500 w-1/2 max-w-[350px] rounded-lg flex flex-col gap-2 pt-2 shadow-lg hover:scale-105 transition-transform">
+        <div class="text-center text-white font-mono font-semibold text-lg">JOIN</div>
+         <input id="join_email" type="email" placeholder="이메일" class = "w-full rounded-lg p-2" required>
+         <input id="join_nick" type="text" placeholder="닉네임" class = "w-full rounded-lg p-2" required>
+         <input id="join_password" type="password" placeholder="비밀번호" class = "w-full rounded-lg p-2" required>
+         <input id="password_confirm" type="password" placeholder="비밀번호 확인" class = "w-full rounded-lg p-2" required>
+         <button id="join_btn" class="hover:bg-slate-400 rounded-lg p-2 font-semibold" >확인</button>
+         <div id="gotologin" class="hidden text-sm text-center hover:cursor-pointer hover:text-white group-hover:block">계정이 이미 있으신가요?</div>
       </div>
+      </div>
+
+       <div id="postForm" class="
+        top-0 right-0 transition-transform translate-x-full opacity-80
+        fixed p-4 h-full flex flex-col justify-between gap-2 bg-slate-50 w-1/3 max-w-screen-sm">
+        <p>+ 메모 남기기</p>
+        <textarea id="textbox" class="outline-dashed ring-offset-neutral-400 h-1/3 min-h-[100px] scroll-m-2 resize-none" maxlength="60"></textarea>
+        <div class="text-center mt-4">
+          <input type="color" id="color_picker" class="w-10 h-10 cursor-pointer" value="#ffffe0">
+        </div>
+        <button id="upload_btn" class="hover:bg-slate-100 hover:text-blue-200 rounded-lg p-2 font-semibold" >확인</button>
+        <button id="exit_btn" class="hover:bg-slate-100 hover:text-pink-200 rounded-lg p-2 font-semibold" >나가기</button>
+        <p class="mt-[200px] text-center font-light text-gray-400 text-sm">Backend by KIM SUMIN</p>
+       </div>
+
+       <!-- 메모 -->
+       <div id="cards" class="
+        fixed bg-white h-1/3 bottom-0 p-3 gap-2 flex flex-row overflow-x-scroll min-w-full max-h-[350px]
+       " style="background: rgba(255, 255, 255, 0.3)">
+        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
+          <div>post-1</div>
+        </div>
+        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
+          <div>post-2</div>
+        </div>
+        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
+          <div>post-3</div>
+        </div>
+        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
+          <div>post-4</div>
+        </div>
+        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
+          <div>post-5</div>
+        </div>
+        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
+          <div>post-6</div>
+        </div>
+        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
+          <div>post-7</div>
+        </div>
+        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
+          <div>post-8</div>
+        </div>
+        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
+          <div>post-9</div>
+        </div>
+
+       </div>
 
     <div id="app"></div>
     <script type="module" src="/main.js"></script>

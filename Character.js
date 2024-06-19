@@ -33,27 +33,32 @@ export class Character {
 
 
         document.addEventListener('keydown', this.onKeyDown.bind(this));
+        document.addEventListener('focusin', this.onFocusIn.bind(this));
+        document.addEventListener('focusout', this.onFocusOut.bind(this));
+
+        this.typing = false;
     }
     create_name(group) {
         const textCanvas = document.createElement('canvas');
         const texContext = textCanvas.getContext('2d');
-        textCanvas.width = 500;
+        textCanvas.height = 150;
         textCanvas.width = 500;
         // 투명 배경 설정
         texContext.clearRect(0, 0, textCanvas.width, textCanvas.height);
 
         const canvasTexture = new THREE.CanvasTexture(textCanvas);
         texContext.fillStyle = 'black'
-        texContext.font = 'bold 150px sans-serif';
+        texContext.font = 'bold 100px sans-serif';
 
         // 텍스트 중앙 정렬
         texContext.textAlign = 'center';
         texContext.textBaseline = 'middle';
 
         texContext.fillText(this.name, textCanvas.width / 2, textCanvas.height / 2 + 5);
-        const name_geo = new THREE.PlaneGeometry(2, 1);
+        const name_geo = new THREE.PlaneGeometry(4, 1);
         canvasTexture.magFilter = THREE.NearestFilter;
-        const name_mat = new THREE.MeshBasicMaterial({ map: canvasTexture, transparent: true, side: THREE.DoubleSide});
+
+        const name_mat = new THREE.MeshBasicMaterial({ map: canvasTexture ,transparent: true, side: THREE.DoubleSide});
         const name = new THREE.Mesh(name_geo, name_mat);
         name.position.z = 3;
         name.position.y = 1.4;
@@ -62,6 +67,7 @@ export class Character {
     }
 
     onKeyDown(event) {
+        if (this.typing) return;
         switch (event.code) {
             case 'KeyW': // W key
                 this.moveForward();
@@ -75,6 +81,17 @@ export class Character {
             case 'KeyD': // D key
                 this.moveRight();
                 break;
+        }
+    }
+    onFocusIn(event) {
+        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+            this.typing = true;
+        }
+    }
+
+    onFocusOut(event) {
+        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+            this.typing = false;
         }
     }
 
