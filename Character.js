@@ -9,11 +9,18 @@ export class Character {
         this.group = null;
         this.model = null;
         this.moveDistance = 0.1;
+
+        this.jumpHeight = 1; // 점프 높이 설정
+        this.isJumping = false; // 점프 상태 확인 변수
+        this.jumpSpeed = 0.2; // 점프 속도 설정
+        this.velocityY = 0; // y축 속도
+        this.gravity = 0.01; // 중력
+
         this.cameraTargetPosition = new THREE.Vector3();
 
         this.init();
     }
-
+    
     init() {
         const loader = new GLTFLoader();
         this.group = new THREE.Group();
@@ -29,8 +36,9 @@ export class Character {
 
             // Initialize camera target position
             this.cameraTargetPosition.copy(this.camera.position);
-        });
 
+            this.animate(); // 애니메이션 루프 시작
+        });
 
         document.addEventListener('keydown', this.onKeyDown.bind(this));
         document.addEventListener('focusin', this.onFocusIn.bind(this));
@@ -38,6 +46,7 @@ export class Character {
 
         this.typing = false;
     }
+
     create_name(group) {
         const textCanvas = document.createElement('canvas');
         const texContext = textCanvas.getContext('2d');
@@ -47,7 +56,7 @@ export class Character {
         texContext.clearRect(0, 0, textCanvas.width, textCanvas.height);
 
         const canvasTexture = new THREE.CanvasTexture(textCanvas);
-        texContext.fillStyle = 'black'
+        texContext.fillStyle = 'black';
         texContext.font = 'bold 100px sans-serif';
 
         // 텍스트 중앙 정렬
@@ -58,7 +67,7 @@ export class Character {
         const name_geo = new THREE.PlaneGeometry(4, 1);
         canvasTexture.magFilter = THREE.NearestFilter;
 
-        const name_mat = new THREE.MeshBasicMaterial({ map: canvasTexture ,transparent: true, side: THREE.DoubleSide});
+        const name_mat = new THREE.MeshBasicMaterial({ map: canvasTexture, transparent: true, side: THREE.DoubleSide });
         const name = new THREE.Mesh(name_geo, name_mat);
         name.position.z = 3;
         name.position.y = 1.4;
@@ -81,8 +90,12 @@ export class Character {
             case 'KeyD': // D key
                 this.moveRight();
                 break;
+            case 'Space': // Space key for jump
+                this.jump();
+                break;
         }
     }
+
     onFocusIn(event) {
         if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
             this.typing = true;
@@ -127,6 +140,31 @@ export class Character {
 
             this.cameraTargetPosition.x = this.group.position.x;
         }
+    }
+
+    jump() {
+        if (this.isJumping) return;
+        this.isJumping = true;
+        this.velocityY = this.jumpSpeed; // 점프 시작 속도 설정
+    }
+
+    animate() {
+        requestAnimationFrame(() => this.animate());
+
+        // 점프 처리
+        if (this.isJumping) {
+            this.group.position.y += this.velocityY;
+            this.velocityY -= this.gravity; // 중력 적용
+
+            // 바닥에 도달하면 점프 종료
+            if (this.group.position.y <= 0) {
+                this.group.position.y = 0;
+                this.isJumping = false;
+                this.velocityY = 0;
+            }
+        }
+
+        this.updateCameraPosition();
     }
 
     updateCameraPosition() {

@@ -9,13 +9,16 @@ export class Memo {
         this.heart = 0
         this.scene = scene;
         this.mesh = null;
+        this.writer = 'anon'
     }
-    init(x, y, cont, color, heart){
+
+    init(x, y, cont, color, heart, writer){
         this.x = x;
         this.y = y;
         this.cont = cont;
         this.color = color;
         this.heart = heart;
+        this.writer = writer
     }
     draw_mm() {
         // Canvas 생성
@@ -90,49 +93,52 @@ export class Memo {
         p.classList.add('translate-x-full');
         p.classList.remove('translate-x-0');
     }
-
     upload(cont, color) {
         this.cont = cont;
         this.color = color;
         this.draw_mm();
 
-        const memoData = {
-            x: this.x,
-            y: this.y,
-            cont: this.cont,
-            color: this.color
-        };
+        // const memoData = {
+        //     x: this.x,
+        //     y: this.y,
+        //     cont: this.cont,
+        //     color: this.color,
+        //     writer: this.writer
+        // };
 
         // 기존에 저장된 메모들을 가져옵니다.
-        let memos = JSON.parse(localStorage.getItem('memos')) || [];
+        // let memos = JSON.parse(localStorage.getItem('memos')) || [];
 
         // 새 메모를 추가합니다.
-        memos.push(memoData);
+        // memos.push(memoData);
 
         // 메모들을 로컬 저장소에 다시 저장합니다.
-        localStorage.setItem('memos', JSON.stringify(memos));
+        // localStorage.setItem('memos', JSON.stringify(memos));
         this.createModeEnd();
         // Fetch
-
-        // fetch('', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Authorization' : document.cookie['token'],
-        //         'Content-Type' : 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         x: this.x,
-        //         y: this.y,
-        //         cont: this.cont,
-        //         color: this.color,
-        //     })
-        // })
-        // .then(res => res.json())
-        // .then(data => {
-        //     console.log('Success: ', data);
-        // })
-        // .catch(err => {
-        //     console.error('Error', err)
-        // })
+        const auth = sessionStorage.getItem('auth');
+        fetch('http://18.207.221.141:8080/api/posts', {
+            method: 'POST',
+            headers: {
+                'Authorization': auth,
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                content: this.cont,
+                color: this.color,
+                coordinate: {
+                    x : this.x,
+                    y : this.y
+                },
+            }),
+            credentials: 'include'
+        })
+        .then(res => console.log(res))
+        .then(data => {
+            console.log('Success: ', data);
+        })
+        .catch(err => {
+            console.error('Error', err)
+        })
     }
 }

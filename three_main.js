@@ -5,11 +5,12 @@ import { Memo } from './Memo';
 
 export default class ThreeMain {
     constructor() {
+
         // scene
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.z = 12.5;
-        this.camera.position.y = 4;
+        this.camera.position.z = 13;
+        this.camera.position.y = 4.5;
         this.camera.rotation.x = -0.26;
 
         // raycaster
@@ -104,10 +105,10 @@ export default class ThreeMain {
         this.wall.position.z = -1.9;
         this.wall.position.y = 2.6;
         this.scene.add(this.wall);
-
+        
+        // user
         this.user = null;
     }
-
 
     createUser(name) {
         this.user = new Character(this.scene, this.camera, name);
@@ -166,6 +167,7 @@ export default class ThreeMain {
         const intersect = this.raycaster.intersectObject(this.wall);
         this.currentMM = new Memo(this.scene);
         this.memo_mode = true;
+        this.currentMM.writer = this.user.name;
         this.currentMM.createModeStart(intersect[0]?.point.x, intersect[0]?.point.y);
     }
     memoupload(text, color){

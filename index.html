@@ -4,9 +4,27 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>minememo</title>
+    <title>ward gallery</title>
   </head>
+  <style>
+      #cards {
+      transition: transform 0.3s ease; /* 변환에 대한 애니메이션 설정 */
+      z-index: 10;
+      transform: translateY(120px)
+    }
+
+    #cards:hover {
+      transform: translateY(10px); /* hover 시 요소를 10px 아래로 이동 */
+    }
+  </style>
   <body>
+    <div id="logoutBtn" class="fixed text-white left-2 top-2 z-40 cursor-pointer w-20 h-10">로그아웃
+    </div>
+    <!-- 메모 -->
+    <div id="cards" class="
+    fixed bg-white bottom-0 h-1/3 p-3 gap-2 flex flex-row overflow-x-scroll min-w-full max-h-[350px]
+   " style="background: rgba(255, 255, 255, 0.3)">
+    </div>
 
      <div id="container" class ="fixed w-screen h-screen p-4 flex items-center justify-center opacity-80">
        <div id="loginForm" class="group relative p-5 bg-slate-500 w-1/2 max-w-[350px] rounded-lg flex flex-col gap-2 pt-2 shadow-lg hover:scale-105 transition-transform">
@@ -40,37 +58,7 @@
         <p class="mt-[200px] text-center font-light text-gray-400 text-sm">Backend by KIM SUMIN</p>
        </div>
 
-       <!-- 메모 -->
-       <div id="cards" class="
-        fixed bg-white h-1/3 bottom-0 p-3 gap-2 flex flex-row overflow-x-scroll min-w-full max-h-[350px]
-       " style="background: rgba(255, 255, 255, 0.3)">
-        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
-          <div>post-1</div>
-        </div>
-        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
-          <div>post-2</div>
-        </div>
-        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
-          <div>post-3</div>
-        </div>
-        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
-          <div>post-4</div>
-        </div>
-        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
-          <div>post-5</div>
-        </div>
-        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
-          <div>post-6</div>
-        </div>
-        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
-          <div>post-7</div>
-        </div>
-        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
-          <div>post-8</div>
-        </div>
-        <div id="card" class="rounded-lg bg-slate-50 h-full w-52 p-2 opacity-90">
-          <div>post-9</div>
-        </div>
+
 
        </div>
 

@@ -1,6 +1,6 @@
 import './style.css'
 import Three_main from './three_main'
-import { Memo } from './Memo';
+import { Memo } from './Memo'
 
 document.querySelector('#app').innerHTML = `
   <div>
@@ -12,7 +12,7 @@ const world = new Three_main();
 world.start();
 
 // login logic
-const apiUrl = 'http://localhost:3000/api/auth';
+const apiUrl = 'http://18.207.221.141:8080/api/auth';
 
 // DOM 요소 가져오기
 const container = document.getElementById('Container');
@@ -35,14 +35,60 @@ const uploadButton = document.getElementById('upload_btn');
 const exitButton = document.getElementById('exit_btn');
 const textbox = document.getElementById('textbox');
 const colorPicker = document.getElementById('color_picker');
+const cards = document.getElementById('cards');
+const logoutBtn = document.getElementById('logoutBtn');
+
+const handleLogout = ()=>{
+  sessionStorage.setItem('islogin', 'false');
+  window.location.href = '/index.html';
+  logoutBtn.style.display = 'none';
+}
+
+logoutBtn.addEventListener('click', handleLogout);
+
+const cards_list = []
+
+const reload = ()=>{
+  if (!cards_list) return;
+  cards.innerHTML =""
+  cards_list.forEach(elem => {
+    makecard(elem[0],elem.writer || '정승호',elem[2],0);
+  })
+}
+window.addEventListener('keydown', reload);
+
+
+const makecard = (x, writer, cont, heart) => {
+  if (cont.length == 0) return;
+  if (Math.abs(world.camera.position.x - x) > 2) return;
+  cards.innerHTML += `
+  <div id="card" class="
+          rounded-lg bg-slate-50 h-full w-52 p-4 opacity-90 flex flex-col gap-2 justify-between
+          shadow-sm
+           ">
+          <div class="flex flex-col gap-1">
+            <div class="font-medium text-gray-400">${writer}</div>
+            <div class="overflow-hidden">${cont}</div>
+          </div>
+          <div class="flex flex-row justify-end ">
+            <div>${heart}</div>
+            <svg id="heart" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+            </svg>
+          </div>
+`
+}
 
 // 쿠키확인
-const islogin =true
+let islogin = sessionStorage.getItem('auth');
 
 if (islogin){
   loginForm.style.display = 'none';
   joinForm.style.display = 'none';
+  cards.style.display = 'flex';
+  logoutBtn.style.display = 'block';
   world.login();
+  const nick = localStorage.getItem('nick')
   world.createUser('정승호');
 
   const local = localStorage.getItem('memos');
@@ -50,7 +96,9 @@ if (islogin){
     const memos = JSON.parse(local);
     memos.forEach(elem => {
       const memo = new Memo(world.scene);
-      memo.init(elem.x, elem.y, elem.cont, elem.color, elem.heart);
+      memo.init(elem.x, elem.y, elem.cont, elem.color, elem.heart, elem.writer);
+      cards_list.push([elem.x,'정승호',elem.cont,0]);
+      makecard(elem.x,'정승호',elem.cont,0);
       memo.draw_mm();
     })
   }
@@ -64,6 +112,8 @@ if (islogin){
 function showLoginForm() {
   loginForm.style.display = 'flex';
   joinForm.style.display = 'none';
+  cards.style.display = 'none';
+  logoutBtn.style.display = 'none';
 }
 
 // 회원가입 폼 표시 함수
@@ -86,10 +136,9 @@ loginButton.addEventListener('click', async () => {
       },
       body: JSON.stringify({ email, password }),
     });
-    if (response.ok) {      
-      const data = await response.json();
-      const token = data.token;
-      setCookie('toekn', token, 7);
+    if (response.ok) {    
+      const auth = response.headers.get("Authorization");
+      sessionStorage.setItem('auth', auth);
       window.location.href = '/index.html';
     } else {
       alert('로그인 실패');
@@ -99,13 +148,6 @@ loginButton.addEventListener('click', async () => {
     alert('로그인 중 오류가 발생했습니다.');
   }
 });
-
-// 쿠키 설정 함수
-function setCookie(name, value, days) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-}
 
 // 회원가입 버튼 클릭 이벤트
 goToJoin.addEventListener('click', () => {
